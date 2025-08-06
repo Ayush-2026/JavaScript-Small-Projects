@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded',()=>{
 
     const productList = document.getElementById('product-list');
@@ -23,6 +24,25 @@ document.addEventListener('DOMContentLoaded',()=>{
         <button data-id="${product.id}">Add to cart</button>
         `;
         productList.appendChild(productDiv);
-    })
+    });
+
+    productList.addEventListener('click',(e)=>{
+        if(e.target.tagName === 'BUTTON'){
+            const productId = parseInt(e.target.getAttribute('data-id'));
+            const product = products.find(p => p.id === productId);
+            addToCart(product);
+            
+        }
+    });
+
+    function addToCart(product){
+        cart.push(product);
+        renderCart();
+        
+    }
+
+    function renderCart(){
+        cartItems.innerText = "";
+      }
 
 });
