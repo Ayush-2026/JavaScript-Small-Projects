@@ -1,59 +1,62 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const todoInput = document.getElementById("todo-input");
-  const addTaskButton = document.getElementById("add-task-btn");
-  const todoList = document.getElementById("todo-list");
 
-  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-  tasks.forEach((task) => renderTask(task));
+document.addEventListener('DOMContentLoaded',()=>{
 
-  addTaskButton.addEventListener("click", () => {
-    const taskText = todoInput.value.trim();
-    if (taskText === "") return;
+ const todoInput = document.getElementById('todo-input');
+ const addTaskButton = document.getElementById("add-task-btn");
+ const todoList = document.getElementById('todo-list');
 
-    const newTask = {
-      id: Date.now(),
-      text: taskText,
-      completed: false,
-    };
+ let tasks = JSON.parse(localStorage.getItem("aloo")) || [];
 
-    tasks.push(newTask);
+ tasks.forEach(task => renderTask(task));
+
+ addTaskButton.addEventListener('click', ()=>{
+  const taskText = todoInput.value.trim();
+  if(taskText === "") return;
+
+  const newTask = {
+    id:Date.now(),
+    text: taskText,
+    completed: false
+  }
+  saveTasks();
+  renderTask(newTask);
+  tasks.push(newTask)
+  todoInput.value = "";
+  console.log(tasks);
+
+ });
+
+
+
+function renderTask(task){
+  const li = document.createElement('li')
+  li.setAttribute('data-id',task.id);
+  if(task.completed) li.classList.add('completed')
+  li.innerHTML = `
+  <span>${task.text}</span>
+  <button>delete</button>
+  `;
+  li.addEventListener('click',(e)=>{
+    if(e.target.tagName === 'BUTTON') return ;
+    task.completed = !task.completed 
+    li.classList.toggle('completed');
     saveTasks();
-    renderTask(newTask)
-    todoInput.value = ""; //clear input
-    console.log(tasks);
   });
 
-  function renderTask(task) {
-    const li = document.createElement("li");
-    li.setAttribute("data-id", task.id);
+  li.querySelector('button').addEventListener('click',(e)=>{
+    e.stopPropagation() // PREVENT TOGGLE FROM FIRING
+    tasks = tasks.filter(t => t.id!==task.id)
+    li.remove();
+    saveTasks();
+  })
+  todoList.appendChild(li);
+}
 
-    if (task.completed) li.classList.add("completed");
-    li.innerHTML = `
-   <span>${task.text}</span>
-   <button>delete</button> 
-   `; // created the button when added a new task , now in next line we need to add it to the list.
-
-    li.addEventListener('click',(e)=>{
-      if(e.target.tagName === "BUTTON") return;
-      task.completed = !task.completed
-      li.classList.toggle('completed')
-      saveTasks();
-    });
-    
-    li.querySelector('button').addEventListener('click',(e)=>{
-      e.stopPropagation(); // prevent toggle from firing 
-      tasks = tasks.filter(t => t.id !== task.id)
-      li.remove();
-      saveTasks();
-
-    })
+ function saveTasks(){
+  localStorage.setItem('aloo',JSON.stringify(tasks));
+ }
 
 
-    todoList.appendChild(li);
-  }
 
-  function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  } //used to save tasks in local storage.
-});
+})

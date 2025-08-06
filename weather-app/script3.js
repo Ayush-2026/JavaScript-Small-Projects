@@ -6,68 +6,54 @@ document.addEventListener("DOMContentLoaded", () => {
   const temperatureDisplay = document.getElementById("temperature");
   const descriptionDisplay = document.getElementById("description");
   const errorMessage = document.getElementById("error-message");
-   
-  const API_key = "160be816e4e091a3704df56ab0d88e0e";
-  
-  getWeatherBtn.addEventListener('click',async()=>{
-        const city = cityInput.value.trim();
-        if(!city) return; //as empty string is considered false in JS.
 
+  const API_KEY = "160be816e4e091a3704df56ab0d88e0e";
 
-        // it may throw an error
-        // server/database is always in another continent.
-    
-        try{
-           const weatherData = await fetchWeatherData(city);
-           displayWeatherData(weatherData);
-        }
-        catch(error){
-            showError();
-        }
-    
-    
-    
-    
-    })
+  getWeatherBtn.addEventListener("click", async () => {
+    const city = cityInput.value.trim();
+    if (!city) return;
 
+    // it may throw an error
 
-    async function fetchWeatherData(city){
-        // gets the data
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_key}`;
-    
+    // server/database is always in another continent
 
-    const response = await fetch(url)
+    try {
+      const weatherData = await fetchWeatherData(city);
+      displayWeatherData(weatherData);
+    } catch (error) {}
+  });
+
+  async function fetchWeatherData(city) {
+    // gets the data
+
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`;
+
+    const response = await fetch(url);
     console.log(typeof response);
-    console.log("response",response);
+    console.log("response", response);
 
-        if(!response.ok){
-            throw new Error("City not found")
-        }
-
-        const data = await response.json();
-        return data;
-
-    }
-    function displayWeatherData(data){
-        // display
-
-        console.log(data)
-       const{name,main,weather} = data
-       cityNameDisplay.textContent = name;
-       temperatureDisplay.textContent = `Temperature : ${main.temp}`;
-       descriptionDisplay.textContent = `Weather : ${weather[0].description}`;
-
-        // unlock the display
-        weatherInfo.classList.remove('hidden');
-        errorMessage.classList.add('hidden')
-        
-
+    if (!response.ok) {
+      throw new Error("City not found");
     }
 
+    const data = await response.json();
+    return data;
+  }
 
-    function showError(){
-        weatherInfo.classList.add('hidden');
-        errorMessage.classList.remove('hidden');
-        // it means if error occurs, then hide the weather info i.e city name, temp, description. And remove the "hidden" class from paragraph having class hidden, so as to unhide and show the error.
-    }
+  function displayWeatherData(data) {
+    // display
+
+    console.log(data);
+    const { name, main, weather } = data;
+    cityNameDisplay.textContent = name;
+    weatherInfo.classList.remove('hidden');
+    errorMessage.classList.add('hidden');
+    temperatureDisplay.textContent = `Temperature : ${main.temp}`;
+    descriptionDisplay.textContent = `Weather : ${weather[0].description}`;
+  }
+
+  function showError() {
+    weatherInfo.classList.remove("hidden");
+    errorMessage.classList.add("hidden");
+  }
 });

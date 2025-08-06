@@ -11,7 +11,12 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100vh;   
+   
+    moz-text-size-adjust: 100%;
+    ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+
 }
 
 .container{
@@ -71,3 +76,4 @@ button:hover{
     color: #FF5722;
     margin-top: 20px;
 }
+
