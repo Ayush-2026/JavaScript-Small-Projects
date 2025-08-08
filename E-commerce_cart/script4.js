@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     productDiv.innerHTML = `
         <span>${product.name} - $${product.price.toFixed(2)}</span>
         <button data-id="${product.id}">Add to cart</button>
+        
         `;
     productList.appendChild(productDiv);
   });
@@ -29,8 +30,31 @@ document.addEventListener("DOMContentLoaded", () => {
       const productId = parseInt(e.target.getAttribute("data-id"));
       const product = products.find((p) => p.id === productId);
       addToCart(product);
+      console.log(cart);
     }
   });
+
+  cartItems.addEventListener('click',(e)=>{
+     if (e.target.tagName === "BUTTON"){
+      cart.forEach((item)=>{
+        if (item.id === parseInt(e.target.getAttribute("data-id"))) {
+          removeFromCart(item);
+        }
+      })
+     } 
+  })
+
+  function removeFromCart(a) {
+    for (let i = 0; i < cart.length; i++) {
+      
+        
+       if (a === cart[i]){
+        cart.splice(i, 1);
+        break;
+       }
+    }
+    renderCart();
+  }
 
   function addToCart(product) {
     cart.push(product);
@@ -44,22 +68,25 @@ document.addEventListener("DOMContentLoaded", () => {
     if (cart.length > 0) {
       emptyCartMessage.classList.add("hidden");
       cartTotalMessage.classList.remove("hidden");
-      cart.forEach((item,index)=>{
-        totalPrice+=item.price;
-        const cartItem = document.createElement('div');
+      cart.forEach((item, index) => {
+        totalPrice += item.price;
+        const cartItem = document.createElement("div");
         cartItem.innerHTML = `
-        ${item.name}-$${item.price.toFixed(2)}
-        `
+        ${item.name}-$${item.price.toFixed(2)};
+        <button data-id="${item.id}">Remove</button>
+        `;
+
         cartItems.appendChild(cartItem);
-        totalPriceDisplay.textContent = `${totalPrice.toFixed(2)}`
-      })
+
+        totalPriceDisplay.textContent = `${totalPrice.toFixed(2)}`;
+      });
     } else {
       emptyCartMessage.classList.remove("hidden");
     }
   }
 
-  checkoutBtn.addEventListener('click',()=>{
-    cart.length = 0 ;
-    alert("Checked Out Successfully")
-  })
+  checkoutBtn.addEventListener("click", () => {
+    cart.length = 0;
+    alert("Checked Out Successfully");
+  });
 });
